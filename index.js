@@ -63,7 +63,7 @@ function getNearbyEventsBrite(req, callback) {
   cityName = req.query.location;
   if(req.query.serq){
     eType = req.query.serq;
-    prevType = eType;
+    altPrevType = eType;
   }
   console.log("cityName: "+cityName);
   console.log("eType: "+eType);
