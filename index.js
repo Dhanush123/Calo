@@ -65,6 +65,9 @@ restService.get("/p", function (req, res) {
 });
 
 function getNearbyEventsBrite(req, callback) {
+  cityName = "";
+  eType = "";
+  cardsSend = [];
   console.log("req: " + req);
   cityName = req.query.location;
   eType = req.query.serq;
