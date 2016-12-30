@@ -74,7 +74,7 @@ function EventbriteCall(callback) {
     params["q"] = eType;
   }
   else{
-    params["crt"]=regular;
+    params["crt"]= "regular";
   }
     params["location.address"] = cityName;
     params["location.within"] = "30mi";
