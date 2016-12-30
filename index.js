@@ -27,7 +27,7 @@ function cardObj() {
   this.image_url = '',
   this.subtitle = '',
   this.buttons = {
-    this.type = 'web_url',
+    'this.type' = 'web_url',
     this.url = '',
     this.title = 'View Event'
   }
