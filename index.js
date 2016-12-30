@@ -22,16 +22,16 @@ var cityName = '';
 var eType = '';
 var cardsSend = [];
 
-function cardObj() {
-  'title': '',
-  'image_url': '',
-  'subtitle': '',
-  'buttons': {
-    'this.type': 'web_url',
-    'url': '',
-    'title': 'View Event'
-  }
-}
+// function cardObj() {
+//   'title': '',
+//   'image_url': '',
+//   'subtitle': '',
+//   'buttons': {
+//     'this.type': 'web_url',
+//     'url': '',
+//     'title': 'View Event'
+//   }
+// }
 
 restService.post('/p', function (req, res) {
   console.log('hook request');
@@ -117,7 +117,15 @@ function EventbriteCall(lat, long, callback) {
         if(res.pagination.object_count > 0){
           for(var i = 0; i < 2; i++){
             if(events[i]){
-              var obj = cardObj();
+              var obj = {
+                title: '',
+                image_url: '',
+                subtitle: '',
+                buttons: {
+                  type: 'web_url',
+                  url: '',
+                  title: 'View Event'
+              };
               obj.title = events[i].name.text;
               obj.image_url = events[i].logo.url;
               obj.subtitle = moment(events[i].start.local).format('MMMM Do YYYY');
