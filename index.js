@@ -70,7 +70,8 @@ function getNearbyEventsBrite(req, callback) {
   console.log('req: ' + req);
   cityName = req.query.location;
   eType = req.query.serq;
-
+  console.log('cityName: '+cityName);
+  console.log('eType: '+eType);
   var params = {
     'address': cityName,
     'components': 'components=country:US',
@@ -103,6 +104,7 @@ function getNearbyEventsBrite(req, callback) {
 //   this.title = 'View Event'
 // }
 function EventbriteCall(lat, long, callback) {
+
   event.getAll({
     q: eType,
     'location.address': cityName,
