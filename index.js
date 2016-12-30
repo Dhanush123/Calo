@@ -5,32 +5,54 @@ const bodyParser = require('body-parser');
 const GoogleMapsAPI = require('googlemaps');
 const request = require('request');
 const event = require('search-eventbrite');
+var moment = require('moment-timezone');
+
+var publicConfig = {
+    key: 'AIzaSyCKzerWst-Rwanyum59N3J60yruUsIUe-k',
+    stagger_time:       100, // for elevationPath
+    encode_polylines:   false,
+    secure:             true, // use https
+};
+var gmAPI = new GoogleMapsAPI(publicConfig);
 
 const restService = express();
 restService.use(bodyParser.json());
 
 var cityName = '';
-var stateName = '';
-var address = '';
-var speech = '';
+var eType = '';
+var cardsSend = [];
 
-restService.post('/', function (req, res) {
+function cardObj() {
+  this.title = '',
+  this.image_url = '',
+  this.subtitle = '',
+  this.buttons = {
+    this.type = 'web_url',
+    this.url = '',
+    this.title = 'View Event'
+  }
+}
+
+restService.post('/p', function (req, res) {
   console.log('hook request');
   try {
       if (req.body) {
-          var requestBody = req.body;
-          getNearbyEventsBrite(requestBody,function(result) {
-            console.log('result: ', speech);
+          getNearbyEventsBrite(req, function(result) {
+            //callback is ultimately to return Messenger appropriate responses formatted correctly
             cityName = '';
-            stateName = '';
-            address = '';
-            return res.json({
-              speech: speech,
-              displayText: speech,
-              source: 'dhanush-calo'
-            });
+            var result;
+            console.log('results w/ getNearbyEventsBrite: ', cardsSend);
+            if(cardsSend){
+              return res.json({
+                results: cardsSend,
+              });
+            }
+            else{
+              return res.json({
+                err: "NOCARDSFOUND"
+              });
+            }
           });
-          console.log('result w/ getNearbyEventsBrite: ', speech);
       }
   }
   catch (err) {
@@ -44,23 +66,13 @@ restService.post('/', function (req, res) {
   }
 });
 
-function getNearbyEventsBrite(requestBody, callback) {
-  console.log('requestBody: ' + JSON.stringify(requestBody));
-  var addC = false;
-  if(requestBody.result.parameters.cityName.length > 0){
-    cityName = requestBody.result.parameters.cityName.indexOf('?') != -1 ? requestBody.result.parameters.cityName.replace('?', '') : requestBody.result.parameters.cityName;
-    address = cityName;
-    addC = true;
-    console.log('cityName: ' + cityName);
-  }
-  if(requestBody.result.parameters.stateName.length > 0){
-    stateName = requestBody.result.parameters.stateName.indexOf(', ') != -1 ? requestBody.result.parameters.stateName.replace(',', '') : requestBody.result.parameters.stateName;
-    stateName = stateName.indexOf('?') != -1 ? stateName.replace('?', '') : stateName;
-    address += addC ? ', ' + stateName : stateName;
-    console.log('stateName: ' + stateName);
-  }
+function getNearbyEventsBrite(req, callback) {
+  console.log('req: ' + JSON.stringify(req));
+  cityName = req.query.location;
+  eType = req.query.serq;
+
   var params = {
-    'address': address,
+    'address': cityName,
     'components': 'components=country:US',
     'language':   'en',
     'region':     'us'
@@ -69,127 +81,55 @@ function getNearbyEventsBrite(requestBody, callback) {
   gmAPI.geocode(params, function(err, result) {
     console.log('err: '+err);
     console.log('result: '+result);
-    var propValue;
-    var errMsg = 'I am sorry. I was unable to get the coordinates for the city that you mentioned. Try adding the state name for better results.';
-    for(var propName in result) {
-        propValue = result[propName]
-        console.log(propName,propValue);
-    }
+    var errMsg = 'I am sorry. I was unable to get the coordinates for the city that you mentioned.';
     if(err == null && result.status == 'OK'){
-      if(result.results[0].geometry.location == undefined) {
-        speech = errMsg;
-        callback();
-      }
-      else {
         console.log('result.results[0]: ' + result.results[0]);
         console.log('result.results[0].geometry.location: ' + result.results[0].geometry.location);
         var lat = result.results[0].geometry.location.lat
         var long = result.results[0].geometry.location.lng;
         console.log('result.results[0].geometry.location.lat: ' + lat);
         console.log('result.results[0].geometry.location.lng: ' + long);
-        USGSCall(lat, long, callback);
-      }
-    }
-    else {
-      speech = errMsg; //put this handling in api.ai later
-      callback();
+        EventbriteCall(lat, long, callback);
     }
   });
 }
 
-function USGSCall(lat, long, callback) {
-  //ex: http://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&latitude=37.7799&longitude=121.9780&maxradius=180
-  var radius;
-  var num;
-  if(cityName.length == 0 && stateName.length > 0){
-    radius = '&maxradiuskm=770'; //state search
-    num = 770;
-  }
-  else{
-    radius = '&maxradiuskm=80'; //city search
-    num = 80;
-  }
-  var options = {
-    url: 'http://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&latitude=' + lat + '&longitude=' + long + radius + '&orderby=time'
-  };
-  var noneFound = 'It appears there has been no recorded earthquake in ' + address + ' in the last 30 days in a ' + (num * 0.621371).toFixed(2) + ' mile radius. If you feel this is a mistake, try phrasing the question differently or try again later.';
-
-  request(options,
-  function (err, res, body) {
-    if (!err && res.statusCode == 200 && res.count != 0) {
-      console.log('USGS res: ' + JSON.stringify(res));
-      var info = JSON.parse(body);
-      console.log('USGS features[0]: ' + JSON.stringify(info.features[0]));
-
-      if(info.features[0] != undefined){
-        var mag = info.features[0].properties.mag;
-        var place = info.features[0].properties.place;
-        var location = place.substring(place.indexOf("m") + 1);
-        var miles = (place.slice(0, place.indexOf("k")) * 0.621371192).toFixed(2); //convert km to miles and round
-        var unixTimeMS = info.features[0].properties.time;
-        console.log('original time given from USGS: ' + unixTimeMS);
-
-        var params = {
-          location: lat + ',' + long,
-          timestamp: 1234567890
-        };
-        gmAPI.timezone(params, function(err, result) {
-          if(err == null && result.status == 'OK') {
-            var hoursOff = (result.dstOffset + result.rawOffset)/3600; //from GMT
-            var tzID = result.timeZoneId;
-            var mTime = moment.tz(unixTimeMS, tzID);
-            var date = mTime.format('MMMM Do YYYY');
-            var time = ' at ' + mTime.format('h:mm:ss a');
-            console.log(date + time);
-            var label = miles >= 2 ? 'miles' : 'mile';
-            speech = 'The last earthquake in ' + address + ' was a ' + mag + ' ' + miles + ' ' + label + location + ' on ' + date + time;
-            console.log('USGS speech: ' + speech);
-            callback();
-          }
-        });
+// this.title = '',
+// this.image_url = '',
+// this.subtitle = '',
+// this.buttons = {
+//   this.type = 'web_url',
+//   this.url = '',
+//   this.title = 'View Event'
+// }
+function EventbriteCall(lat, long, callback) {
+  event.getAll({
+    q: eType,
+    'location.address': cityName,
+    'location.within': '30mi',
+    sort_by: 'date'
+    }, function(err, res, events){
+      if(err){
+        return console.log('err: ', err);
       }
       else{
-        console.log('USGS err from if statement: ' + JSON.stringify(err));
-        speech = noneFound;
-        callback();
+        console.log('events: ', events);
+        if(res.pagination.object_count > 0){
+          for(var i = 0; i < 2; i++){
+            if(events[i]){
+              var obj = cardObj();
+              obj.title = events[i].name.text;
+              obj.image_url = events[i].logo.url;
+              obj.subtitle = moment(events[i].start.local).format('MMMM Do YYYY');
+              obj.buttons.url = events[i].url;
+              cardsSend[i] = obj;
+            }
+          }
+        }
       }
-    }
-    else {
-      console.log('USGS err from else statement: ' + JSON.stringify(err));
-      speech = noneFound;
-      callback();
-    }
   });
-}
-
-//for reference: http://stackoverflow.com/questions/37960857/how-to-show-personalized-welcome-message-in-facebook-messenger?answertab=active#tab-top
-function createGreetingApi(data) {
-  request({
-    uri: 'https://graph.facebook.com/v2.6/me/thread_settings',
-    qs: { access_token: 'EAAChvQrWC7EBAHe7fTmPzZBDJmHI8xH6MuGwomXyETlkFxXvHVluD4ShLZCSgIzEfwrRcSvGAJj0WmPYRnqb8HZBPrYfTY1wAZAJezeH7kJ8Q7oPWRps6ErdYZBKrGi9WPrUulqW5YVdN00lsntdC0KaRFrg3UEWgtSQVbKhe9AZDZD' },
-    method: 'POST',
-    json: data
-
-    }, function (error, response, body) {
-    if (!error && response.statusCode == 200) {
-      console.log("Greeting set successfully!");
-    } else {
-      console.error("Failed calling Thread Reference API", response.statusCode, response.statusMessage, body.error);
-    }
-  });
-}
-
-function setGreetingText() {
-  var greetingData = {
-    setting_type: "greeting",
-    greeting:{
-      text:"Hi {{user_first_name}}, welcome! You can ask when the last earthquake was in any US city."
-    }
-  };
-  createGreetingApi(greetingData);
 }
 
 restService.listen((process.env.PORT || 8000), function () {
   console.log('Server listening');
-  setGreetingText();
 });
