@@ -23,13 +23,13 @@ var eType = '';
 var cardsSend = [];
 
 function cardObj() {
-  this.title = '',
-  this.image_url = '',
-  this.subtitle = '',
-  this.buttons = {
-    'this.type' = 'web_url',
-    this.url = '',
-    this.title = 'View Event'
+  this.title: '',
+  this.image_url: '',
+  this.subtitle: '',
+  this.buttons: {
+    'this.type': 'web_url',
+    this.url: '',
+    this.title: 'View Event'
   }
 }
 
