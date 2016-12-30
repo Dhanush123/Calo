@@ -65,10 +65,10 @@ function getNearbyEventsBrite(req, callback) {
   }
   console.log("cityName: "+cityName);
   console.log("eType: "+eType);
-  EventbriteCall(lat, long, callback);
+  EventbriteCall(callback);
 }
 
-function EventbriteCall(lat, long, callback) {
+function EventbriteCall(callback) {
   var params = {};
   if (eType){
     params["q"] = eType;
