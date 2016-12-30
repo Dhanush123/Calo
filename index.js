@@ -64,9 +64,6 @@ function getNearbyEventsBrite(req, callback) {
   if(req.query.serq){
     eType = req.query.serq;
   }
-  else{
-    eType = altPrevType;
-  }
   console.log("cityName: "+cityName);
   console.log("eType: "+eType);
   console.log("altPrevType: "+altPrevType);
@@ -75,7 +72,7 @@ function getNearbyEventsBrite(req, callback) {
 
 function EventbriteCall(callback) {
   var params = {};
-  if(eType != undefined){
+  if(eType != undefined && eType != "undefined"){
     params["q"] = eType;
   }
   params["location.address"] = cityName;
