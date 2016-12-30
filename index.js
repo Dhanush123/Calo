@@ -118,7 +118,7 @@ function EventbriteCall(lat, long, callback) {
       else{
         console.log("events: ", events);
         if(events.length > 0){
-          for(var i = 0; i < 2; i++){
+          for(var i = 0; i < 5; i++){
             if(events[i]){
               var obj = {
                 title: "",
