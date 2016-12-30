@@ -75,6 +75,9 @@ function EventbriteCall(callback) {
   if(eType != undefined && eType != "undefined" && eType != ""){
     params["q"] = eType;
   }
+  else{
+    params["q"] = altPrevType;
+  }
   params["location.address"] = cityName;
   params["location.within"] = "30mi";
   params["sort_by"] =  "date";
