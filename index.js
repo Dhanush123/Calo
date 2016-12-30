@@ -75,7 +75,9 @@ function getNearbyEventsBrite(req, callback) {
 
 function EventbriteCall(callback) {
   var params = {};
-  params["q"] = eType != undefined ? eType : altPrevType;
+  if(eType != undefined){
+    params["q"] = eType;
+  }
   params["location.address"] = cityName;
   params["location.within"] = "30mi";
   params["sort_by"] =  "date";
