@@ -135,6 +135,7 @@ function EventbriteCall(lat, long, callback) {
             }
           }
         }
+        callback();
       }
   });
 }
