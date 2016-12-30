@@ -105,13 +105,14 @@ function getNearbyEventsBrite(req, callback) {
 //   this.title = "View Event"
 // }
 function EventbriteCall(lat, long, callback) {
-
-  event.getAll({
-    q: eType,
-    "location.address": cityName,
-    "location.within": "30mi",
-    sort_by: "date"
-    }, function(err, res, events){
+  var params;
+  if (eType){
+    params["q"] = eType;
+  }
+  params["location.address"] = cityName;
+  params["location.within"] = "30mi";
+  params["sort_by"] =  "date";
+  event.getAll(params, function(err, res, events){
       if(err){
         return console.log("err: ", err);
       }
