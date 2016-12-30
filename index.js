@@ -127,9 +127,9 @@ function EventbriteCall(lat, long, callback) {
                   title: 'View Event'
                 }
               };
-              obj.title = events[i].name.text;
-              obj.image_url = events[i].logo.url;
-              obj.subtitle = moment(events[i].start.local).format('MMMM Do YYYY');
+              obj.title = events[i].name;
+              obj.image_url = events[i].thumbnail;
+              obj.subtitle = moment(events[i].start).format('MMMM Do YYYY');
               obj.buttons.url = events[i].url;
               cardsSend[i] = obj;
             }
