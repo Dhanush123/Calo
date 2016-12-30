@@ -21,6 +21,7 @@ restService.use(bodyParser.json());
 var cityName = "";
 var eType = "";
 var cardsSend = [];
+var altPrevType = "event";
 
 restService.get("/p", function (req, res) {
   console.log("hook request");
@@ -62,6 +63,7 @@ function getNearbyEventsBrite(req, callback) {
   cityName = req.query.location;
   if(req.query.serq){
     eType = req.query.serq;
+    prevType = eType;
   }
   console.log("cityName: "+cityName);
   console.log("eType: "+eType);
@@ -70,9 +72,7 @@ function getNearbyEventsBrite(req, callback) {
 
 function EventbriteCall(callback) {
   var params = {};
-  if (eType){
-    params["q"] = eType;
-  }
+  params["q"] = eType ? eType : altPrevType;
   params["location.address"] = cityName;
   params["location.within"] = "30mi";
   params["sort_by"] =  "date";
