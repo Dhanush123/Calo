@@ -105,7 +105,7 @@ function getNearbyEventsBrite(req, callback) {
 //   this.title = "View Event"
 // }
 function EventbriteCall(lat, long, callback) {
-  var params;
+  var params = {};
   if (eType){
     params["q"] = eType;
   }
