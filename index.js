@@ -38,8 +38,6 @@ restService.get("/p", function (req, res) {
       if (req) {
           getNearbyEventsBrite(req, function(result) {
             //callback is ultimately to return Messenger appropriate responses formatted correctly
-            cityName = "";
-            cardsSend = [];
             var result;
             console.log("results w/ getNearbyEventsBrite: ", cardsSend);
             if(cardsSend){
