@@ -63,20 +63,21 @@ function getNearbyEventsBrite(req, callback) {
   cityName = req.query.location;
   if(req.query.serq){
     eType = req.query.serq;
-    altPrevType = eType;
   }
   console.log("cityName: "+cityName);
   console.log("eType: "+eType);
+  console.log("altPrevType: "+altPrevType);
   EventbriteCall(callback);
 }
 
 function EventbriteCall(callback) {
   var params = {};
-  params["q"] = eType ? eType : altPrevType;
+  params["q"] = eType != undefined ? eType : altPrevType;
   params["location.address"] = cityName;
   params["location.within"] = "30mi";
   params["sort_by"] =  "date";
   params["include_all_series_instances"] = "false";
+  console.log("params: ",params);
   event.getAll(params, function(err, res, events){
       if(err){
         return console.log("err: ", err);
