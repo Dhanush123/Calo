@@ -114,7 +114,7 @@ function EventbriteCall(lat, long, callback) {
       }
       else{
         console.log('events: ', events);
-        if(res.pagination.object_count > 0){
+        if(events.length > 0){
           for(var i = 0; i < 2; i++){
             if(events[i]){
               var obj = {
