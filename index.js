@@ -76,7 +76,7 @@ function EventbriteCall(callback) {
     params["q"] = eType;
   }
   else{
-    params["q"] = altPrevType;
+    params["categories"] = "conference";
   }
   params["location.address"] = cityName;
   params["location.within"] = "30mi";
@@ -109,6 +109,7 @@ function EventbriteCall(callback) {
               cardsSend[i] = obj;
             }
           }
+          events.push(events.shift());
         }
         callback();
       }
