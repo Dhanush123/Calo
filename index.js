@@ -33,10 +33,10 @@ var cardsSend = [];
 //   }
 // }
 
-restService.post('/p', function (req, res) {
+restService.get('/p', function (req, res) {
   console.log('hook request');
   try {
-      if (req.body) {
+      if (req) {
           getNearbyEventsBrite(req, function(result) {
             //callback is ultimately to return Messenger appropriate responses formatted correctly
             cityName = '';
