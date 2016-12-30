@@ -73,10 +73,14 @@ function EventbriteCall(callback) {
   if (eType){
     params["q"] = eType;
   }
-  params["location.address"] = cityName;
-  params["location.within"] = "30mi";
-  params["sort_by"] =  "date";
-  params["include_all_series_instances"] = "false";
+  else{
+    params["crt"]=regular;
+  }
+    params["location.address"] = cityName;
+    params["location.within"] = "30mi";
+    params["sort_by"] =  "date";
+    params["include_all_series_instances"] = "false";
+    params["sort"] = "best";
   event.getAll(params, function(err, res, events){
       if(err){
         return console.log("err: ", err);
