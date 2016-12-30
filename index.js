@@ -125,6 +125,7 @@ function EventbriteCall(lat, long, callback) {
                   type: 'web_url',
                   url: '',
                   title: 'View Event'
+                }
               };
               obj.title = events[i].name.text;
               obj.image_url = events[i].logo.url;
