@@ -70,7 +70,9 @@ function getNearbyEventsBrite(req, callback) {
   cardsSend = [];
   console.log("req: " + req);
   cityName = req.query.location;
-  eType = req.query.serq;
+  if(req.query.serq){
+    eType = req.query.serq;
+  }
   console.log("cityName: "+cityName);
   console.log("eType: "+eType);
   var params = {
