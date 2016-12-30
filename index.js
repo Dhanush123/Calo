@@ -21,16 +21,6 @@ restService.use(bodyParser.json());
 var cityName = "";
 var eType = "";
 var cardsSend = [];
-// function cardObj() {
-//   "title": "",
-//   "image_url": "",
-//   "subtitle": "",
-//   "buttons": {
-//     "this.type": "web_url",
-//     "url": "",
-//     "title": "View Event"
-//   }
-// }
 
 restService.get("/p", function (req, res) {
   console.log("hook request");
@@ -75,37 +65,9 @@ function getNearbyEventsBrite(req, callback) {
   }
   console.log("cityName: "+cityName);
   console.log("eType: "+eType);
-  var params = {
-    "address": cityName,
-    "components": "components=country:US",
-    "language":   "en",
-    "region":     "us"
-  };
-
-  gmAPI.geocode(params, function(err, result) {
-    console.log("err: "+err);
-    console.log("result: "+result);
-    var errMsg = "I am sorry. I was unable to get the coordinates for the city that you mentioned.";
-    if(err == null && result.status == "OK"){
-        console.log("result.results[0]: " + result.results[0]);
-        console.log("result.results[0].geometry.location: " + result.results[0].geometry.location);
-        var lat = result.results[0].geometry.location.lat
-        var long = result.results[0].geometry.location.lng;
-        console.log("result.results[0].geometry.location.lat: " + lat);
-        console.log("result.results[0].geometry.location.lng: " + long);
-        EventbriteCall(lat, long, callback);
-    }
-  });
+  EventbriteCall(lat, long, callback);
 }
 
-// this.title = "",
-// this.image_url = "",
-// this.subtitle = "",
-// this.buttons = {
-//   this.type = "web_url",
-//   this.url = "",
-//   this.title = "View Event"
-// }
 function EventbriteCall(lat, long, callback) {
   var params = {};
   if (eType){
@@ -114,6 +76,7 @@ function EventbriteCall(lat, long, callback) {
   params["location.address"] = cityName;
   params["location.within"] = "30mi";
   params["sort_by"] =  "date";
+  params["include_all_series_instances"] = "false";
   event.getAll(params, function(err, res, events){
       if(err){
         return console.log("err: ", err);
