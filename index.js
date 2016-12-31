@@ -77,7 +77,7 @@ restService.get("/p", function (req, res) {
   }
 });
 
-function getNearbyEventsBrite(req, callback) {
+function getYelpEvents(req, callback) {
   cityName = "";
   yType = "";
   cardsSend = [];
@@ -89,14 +89,6 @@ function getNearbyEventsBrite(req, callback) {
   YelpCall(callback);
 }
 
-// title: "",
-// image_url: "",
-// subtitle: "",
-// buttons: [{
-//   type: "web_url",
-//   url: "",
-//   title: "View Event"
-// }]
 function YelpCall(callback){
   yelp.accessToken(clientId, clientSecret).then(response => {
     const client = yelp.client(response.jsonBody.access_token);
