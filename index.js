@@ -255,9 +255,7 @@ function getFBEvents(callback) {
         });
       }
     }
-    else {
-      callback();
-    }
+    callback();
   });
 }
 
