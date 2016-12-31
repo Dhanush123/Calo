@@ -37,17 +37,6 @@ var eType = "";
 var yType = "";
 var cardsSend = [];
 
-var cardObj = {
-  title: "",
-  image_url: "",
-  subtitle: "",
-  buttons: [{
-    type: "web_url",
-    url: "",
-    title: "View Event"
-  }]
-};
-
 restService.get("/p", function (req, res) {
   console.log("hook request");
   try {
@@ -89,11 +78,22 @@ function YelpCall(callback){
   yelp.search({term: yType, location: cityName, limit: 10, radius: 25})
   .then(function (data) {
     console.log("got yelp response");
+    console.log("data pre-JSONparse: "+data);
     var data = JSON.parse(data);
     console.log("data: "+data);
     if(data.total >= 5){
       for(var i = 0; i < 5; i++){
         if(data.businesses[i]){
+          var cardObj = {
+            title: "",
+            image_url: "",
+            subtitle: "",
+            buttons: [{
+              type: "web_url",
+              url: "",
+              title: "View Event"
+            }]
+          };
           cardObj.title = data.businesses[i].name;
           cardObj.image_url = data.businesses[i].image_url;
           cardObj.subtitle = data.businesses[i].location.address1;
@@ -138,6 +138,16 @@ function EventbriteCall(callback) {
         if(events.length > 0){
           for(var i = 0; i < 5; i++){
             if(events[i]){
+              var cardObj = {
+                title: "",
+                image_url: "",
+                subtitle: "",
+                buttons: [{
+                  type: "web_url",
+                  url: "",
+                  title: "View Event"
+                }]
+              };
               cardObj.title = events[i].name;
               cardObj.image_url = events[i].thumbnail;
               cardObj.subtitle = moment(events[i].start).format("MMMM Do YYYY");
