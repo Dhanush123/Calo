@@ -235,21 +235,24 @@ function getFBEvents(req, callback) {
             "lng": long
         });
         es.search().then(function (eventss) {
-            console.log(JSON.stringify(eventss));
+            // console.log(JSON.stringify(eventss));
             var res = JSON.parse(eventss);
             console.log("res.metadata.events: "+res.metadata.events);
             if(res.metadata.events > 0){
               var lim = res.metadata.events >= 5 ? 5 : res.metadata.events;
               for(var i = 0; i < lim; i++){
-                if(events[i]){
+                if(res.events[i]){
                   var cardObj = {
                     title: "",
                     image_url: "",
                     subtitle: "",
                   };
                   cardObj.title = res.events[i].name;
+                  console.log("cardObj.title: "+cardObj.title);
                   cardObj.image_url = res.events[i].coverPicture;
+                  console.log("cardObj.image_url: "+cardObj.image_url);
                   cardObj.subtitle = moment(res.events[i].startTime).format("MMMM Do YYYY");
+                  console.log("cardObj.subtitle: "+cardObj.subtitle);
                   cardsSend[i] = cardObj;
                 }
               }
