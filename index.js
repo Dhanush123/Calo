@@ -92,7 +92,7 @@ function YelpCall(callback){
       location: cityName
     }).then(response => {
       var res = response.jsonBody;
-      console.log(res);
+      console.log("res: "+res);
       if(res.total >= 5){
         for(var i = 0; i < 5; i++){
           if(res.businesses[i]){
@@ -107,7 +107,7 @@ function YelpCall(callback){
       callback();
     });
   }).catch(e => {
-    console.log(e);
+    console.log("error: "+e);
   });
 }
 
