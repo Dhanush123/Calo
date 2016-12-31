@@ -7,6 +7,7 @@ const request = require("request");
 const event = require("search-eventbrite");
 const moment = require("moment-timezone");
 const Yelp = require('yelp-api-v3');
+var EventSearch = require("facebook-events-by-location-core");
 
 var yelp = new Yelp({
   app_id: "g4GGJOk6feS7HoSDAfzJtw",
