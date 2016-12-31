@@ -245,8 +245,6 @@ function FBCall(callback){
             console.log(JSON.stringify(eventss));
             var res = JSON.parse(eventss);
             console.log("res.metadata.events: "+res.metadata.events);
-            // if(res.metadata.events > 0){
-              var lim = res.metadata.events >= 5 ? 5 : res.metadata.events;
               for(var i = 0; i < lim; i++){
                 if(res.events[i]){
                   var cardObj = {
@@ -262,9 +260,10 @@ function FBCall(callback){
                   console.log("cardObj.subtitle: "+cardObj.subtitle);
                   cardsSend[i] = cardObj;
                 }
+                else{
+                  callback();
+                }
                }
-               callback();
-            // }
         }).catch(function (error) {
             console.error("err: "+JSON.stringify(error));
         });
