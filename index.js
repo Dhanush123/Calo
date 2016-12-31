@@ -36,7 +36,7 @@ function clbk(result) {
      err: "NOCARDSFOUND"
    });
  }
-});
+}
 
 var cityName = "";
 var eType = "";
