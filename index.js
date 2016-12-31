@@ -8,16 +8,10 @@ const event = require("search-eventbrite");
 const moment = require("moment-timezone");
 const yelp = require("yelp-fusion");
 
-var publicConfig = {
-    key: "AIzaSyCKzerWst-Rwanyum59N3J60yruUsIUe-k",
-    stagger_time:       100, // for elevationPath
-    encode_polylines:   false,
-    secure:             true, // use https
-};
-var gmAPI = new GoogleMapsAPI(publicConfig);
+
 
 var clientId = "g4GGJOk6feS7HoSDAfzJtw";
-var secret = "tIJAG3oWzXTA9YJUJunB4DrDqwFtYbrGR6BrICG2U0lWk05ucvT8gvlesvrhZElt";
+var clientSecret = "tIJAG3oWzXTA9YJUJunB4DrDqwFtYbrGR6BrICG2U0lWk05ucvT8gvlesvrhZElt";
 
 const restService = express();
 restService.use(bodyParser.json());
