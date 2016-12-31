@@ -16,21 +16,6 @@ var yelp = new Yelp({
 const restService = express();
 restService.use(bodyParser.json());
 
-function clbk(res) {
- //callback is ultimately to return Messenger appropriate responses formatted correctly
- console.log("results w/ getNearbyEventsBrite or getYelpEvents: ", cardsSend);
- if(cardsSend){
-   return res.json({
-     results: cardsSend,
-   });
- }
- else{
-   return res.json({
-     err: "NOCARDSFOUND"
-   });
- }
-}
-
 var cityName = "";
 var eType = "";
 var yType = "";
@@ -41,10 +26,38 @@ restService.get("/p", function (req, res) {
   try {
       if (req) {
         if(req.query.serq){
-          getNearbyEventsBrite(req,clbk,res);
+          getNearbyEventsBrite(req, function(result) {
+                     //callback is ultimately to return Messenger appropriate responses formatted correctly
+                     var result;
+                     console.log("results w/ getNearbyEventsBrite: ", cardsSend);
+                     if(cardsSend){
+                       return res.json({
+                         results: cardsSend,
+                       });
+                     }
+                     else{
+                       return res.json({
+                         err: "NOCARDSFOUND"
+                       });
+                     }
+                   });
         }
         else if(req.query.yerq){
-          getYelpEvents(req,clbk,res);
+          getYelpEvents(req, function(result) {
+                     //callback is ultimately to return Messenger appropriate responses formatted correctly
+                     var result;
+                     console.log("results w/ getYelpEvents: ", cardsSend);
+                     if(cardsSend){
+                       return res.json({
+                         results: cardsSend,
+                       });
+                     }
+                     else{
+                       return res.json({
+                         err: "NOCARDSFOUND"
+                       });
+                     }
+                   });
         }
       }
   }
@@ -59,7 +72,7 @@ restService.get("/p", function (req, res) {
   }
 });
 
-function getYelpEvents(req,callback,resy) {
+function getYelpEvents(req,callback) {
   cityName = "";
   yType = "";
   cardsSend = [];
@@ -68,10 +81,10 @@ function getYelpEvents(req,callback,resy) {
   yType = req.query.yerq;
   console.log("cityName: "+cityName);
   console.log("yType: "+yType);
-  YelpCall(callback,resy);
+  YelpCall(callback);
 }
 
-function YelpCall(callback,resy){
+function YelpCall(callback){
   console.log("yelp call entered");
   // https://github.com/Yelp/yelp-api-v3/blob/master/docs/api-references/businesses-search.md
   yelp.search({term: yType, location: cityName, limit: 10, radius: 25})
@@ -101,7 +114,7 @@ function YelpCall(callback,resy){
         }
       }
     }
-    callback(resy);
+    callback();
   })
   .catch(function (err) {
       console.error("yelp err: "+err);
@@ -117,10 +130,10 @@ function getNearbyEventsBrite(req, callback) {
   eType = req.query.serq;
   console.log("cityName: "+cityName);
   console.log("eType: "+eType);
-  EventbriteCall(callback,resy);
+  EventbriteCall(callback);
 }
 
-function EventbriteCall(callback,resy) {
+function EventbriteCall(callback) {
   var params = {};
   params["q"] = eType;
   params["location.address"] = cityName;
@@ -156,7 +169,7 @@ function EventbriteCall(callback,resy) {
           }
           events.push(events.shift());
         }
-        callback(resy);
+        callback();
       }
   });
 }
