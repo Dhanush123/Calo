@@ -235,7 +235,7 @@ function getFBEvents(req, callback) {
             "lng": long
         });
         es.search().then(function (eventss) {
-            // console.log(JSON.stringify(eventss));
+            console.log(JSON.stringify(eventss));
             var res = JSON.parse(eventss);
             console.log("res.metadata.events: "+res.metadata.events);
             if(res.metadata.events > 0){
@@ -259,7 +259,7 @@ function getFBEvents(req, callback) {
               callback();
             }
         }).catch(function (error) {
-            console.error(JSON.stringify(error));
+            console.error("err: "+JSON.stringify(error));
         });
       }
     }
