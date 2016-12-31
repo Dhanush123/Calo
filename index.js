@@ -238,6 +238,7 @@ function getFBEvents(req, callback) {
             console.log(JSON.stringify(eventss));
             var res = JSON.parse(eventss);
             if(res.metadata.events > 0){
+              console.log("res.metadata.events: "+res.metadata.events);
               var lim = res.metadata.events >= 5 ? 5 : res.metadata.events;
               for(var i = 0; i < lim; i++){
                 if(events[i]){
@@ -252,8 +253,8 @@ function getFBEvents(req, callback) {
                   cardsSend[i] = cardObj;
                 }
               }
+              callback();
             }
-            callback();
         }).catch(function (error) {
             console.error(JSON.stringify(error));
         });
