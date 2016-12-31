@@ -106,7 +106,7 @@ function YelpCall(callback){
             buttons: [{
               type: "web_url",
               url: "",
-              title: "View Event"
+              title: "View Place"
             }]
           };
           cardObj.title = data.businesses[i].name;
