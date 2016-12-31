@@ -6,12 +6,12 @@ const GoogleMapsAPI = require("googlemaps");
 const request = require("request");
 const event = require("search-eventbrite");
 const moment = require("moment-timezone");
-const yelp = require("yelp-fusion");
+const Yelp = require('yelp-api-v3');
 
-
-
-var clientId = "g4GGJOk6feS7HoSDAfzJtw";
-var clientSecret = "tIJAG3oWzXTA9YJUJunB4DrDqwFtYbrGR6BrICG2U0lWk05ucvT8gvlesvrhZElt";
+var yelp = new Yelp({
+  app_id: "g4GGJOk6feS7HoSDAfzJtw",
+  app_secret: "tIJAG3oWzXTA9YJUJunB4DrDqwFtYbrGR6BrICG2U0lWk05ucvT8gvlesvrhZElt"
+});
 
 const restService = express();
 restService.use(bodyParser.json());
@@ -84,30 +84,27 @@ function getYelpEvents(req, callback) {
 }
 
 function YelpCall(callback){
-  yelp.accessToken(clientId, clientSecret).then(response => {
-    const client = yelp.client(response.jsonBody.access_token);
 
-    client.search({
-      term: yType,
-      location: cityName
-    }).then(response => {
-      var res = response.jsonBody;
-      console.log("res: "+res);
-      if(res.total >= 5){
-        for(var i = 0; i < 5; i++){
-          if(res.businesses[i]){
-            cardObj.title = res.businesses[i].name;
-            cardObj.image_url = res.businesses[i].image_url;
-            cardObj.subtitle = res.businesses[i].location.address1;
-            cardObj.buttons[0].url = res.businesses[i].url;
-            cardsSend[i] = cardObj;
-          }
+  // https://github.com/Yelp/yelp-api-v3/blob/master/docs/api-references/businesses-search.md
+  yelp.search({term: yerq, location: cityName, limit: 10, radius: 25})
+  .then(function (data) {
+    var res = data.jsonBody;
+    console.log("res: "+res);
+    if(res.total >= 5){
+      for(var i = 0; i < 5; i++){
+        if(res.businesses[i]){
+          cardObj.title = res.businesses[i].name;
+          cardObj.image_url = res.businesses[i].image_url;
+          cardObj.subtitle = res.businesses[i].location.address1;
+          cardObj.buttons[0].url = res.businesses[i].url;
+          cardsSend[i] = cardObj;
         }
       }
-      callback();
-    });
-  }).catch(e => {
-    console.log("error: "+e);
+    }
+    callback();
+  })
+  .catch(function (err) {
+      console.error(err);
   });
 }
 

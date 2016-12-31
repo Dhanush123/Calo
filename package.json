@@ -10,7 +10,7 @@
     "moment-timezone": "^0.5.11",
     "request": "^2.79.0",
     "search-eventbrite": "^1.0.7",
-    "yelp-fusion": "^1.0.3"
+    "yelp-api-v3": "^1.5.0"
   },
   "devDependencies": {},
   "scripts": {
