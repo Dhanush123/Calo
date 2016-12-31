@@ -5,7 +5,8 @@ const bodyParser = require("body-parser");
 const GoogleMapsAPI = require("googlemaps");
 const request = require("request");
 const event = require("search-eventbrite");
-var moment = require("moment-timezone");
+const moment = require("moment-timezone");
+const yelp = require("yelp-fusion");
 
 var publicConfig = {
     key: "AIzaSyCKzerWst-Rwanyum59N3J60yruUsIUe-k",
@@ -15,32 +16,54 @@ var publicConfig = {
 };
 var gmAPI = new GoogleMapsAPI(publicConfig);
 
+var clientId = "g4GGJOk6feS7HoSDAfzJtw";
+var secret = "tIJAG3oWzXTA9YJUJunB4DrDqwFtYbrGR6BrICG2U0lWk05ucvT8gvlesvrhZElt";
+
 const restService = express();
 restService.use(bodyParser.json());
 
+function clbk(result) {
+ //callback is ultimately to return Messenger appropriate responses formatted correctly
+ var result;
+ console.log("results w/ getNearbyEventsBrite or getYelpEvents: ", cardsSend);
+ if(cardsSend){
+   return res.json({
+     results: cardsSend,
+   });
+ }
+ else{
+   return res.json({
+     err: "NOCARDSFOUND"
+   });
+ }
+});
+
 var cityName = "";
 var eType = "";
+var yType = "";
 var cardsSend = [];
+
+var cardObj = {
+  title: "",
+  image_url: "",
+  subtitle: "",
+  buttons: [{
+    type: "web_url",
+    url: "",
+    title: "View Event"
+  }]
+};
 
 restService.get("/p", function (req, res) {
   console.log("hook request");
   try {
       if (req) {
-          getNearbyEventsBrite(req, function(result) {
-            //callback is ultimately to return Messenger appropriate responses formatted correctly
-            var result;
-            console.log("results w/ getNearbyEventsBrite: ", cardsSend);
-            if(cardsSend){
-              return res.json({
-                results: cardsSend,
-              });
-            }
-            else{
-              return res.json({
-                err: "NOCARDSFOUND"
-              });
-            }
-          });
+        if(req.query.serq){
+          getNearbyEventsBrite(req,clbk);
+        }
+        else if(req.query.yerq){
+          getYelpEvents(req,clbk);
+        }
       }
   }
   catch (err) {
@@ -53,6 +76,54 @@ restService.get("/p", function (req, res) {
     });
   }
 });
+
+function getNearbyEventsBrite(req, callback) {
+  cityName = "";
+  yType = "";
+  cardsSend = [];
+  console.log("req: " + req);
+  cityName = req.query.location;
+  yType = req.query.yerq;
+  console.log("cityName: "+cityName);
+  console.log("yType: "+yType);
+  YelpCall(callback);
+}
+
+// title: "",
+// image_url: "",
+// subtitle: "",
+// buttons: [{
+//   type: "web_url",
+//   url: "",
+//   title: "View Event"
+// }]
+function YelpCall(callback){
+  yelp.accessToken(clientId, clientSecret).then(response => {
+    const client = yelp.client(response.jsonBody.access_token);
+
+    client.search({
+      term: yerq,
+      location: cityName
+    }).then(response => {
+      var res = response.jsonBody;
+      console.log(res);
+      if(res.total >= 5){
+        for(int i = 0; i < 5; i++){
+          if(res.businesses[i]){
+            cardObj.title = res.businesses[i].name;
+            cardObj.image_url = res.businesses[i].image_url;
+            cardObj.subtitle = res.businesses[i].location.address1;
+            cardObj.buttons[0].url = res.businesses[i].url;
+            cardsSend[i] = cardObj;
+          }
+        }
+      }
+      callback();
+    });
+  }).catch(e => {
+    console.log(e);
+  });
+}
 
 function getNearbyEventsBrite(req, callback) {
   cityName = "";
@@ -83,21 +154,11 @@ function EventbriteCall(callback) {
         if(events.length > 0){
           for(var i = 0; i < 5; i++){
             if(events[i]){
-              var obj = {
-                title: "",
-                image_url: "",
-                subtitle: "",
-                buttons: [{
-                  type: "web_url",
-                  url: "",
-                  title: "View Event"
-                }]
-              };
-              obj.title = events[i].name;
-              obj.image_url = events[i].thumbnail;
-              obj.subtitle = moment(events[i].start).format("MMMM Do YYYY");
-              obj.buttons[0].url = events[i].url;
-              cardsSend[i] = obj;
+              cardObj.title = events[i].name;
+              cardObj.image_url = events[i].thumbnail;
+              cardObj.subtitle = moment(events[i].start).format("MMMM Do YYYY");
+              cardObj.buttons[0].url = events[i].url;
+              cardsSend[i] = cardObj;
             }
           }
           events.push(events.shift());

@@ -9,7 +9,8 @@
     "googlemaps": "^1.12.0",
     "moment-timezone": "^0.5.11",
     "request": "^2.79.0",
-    "search-eventbrite": "^1.0.7"
+    "search-eventbrite": "^1.0.7",
+    "yelp-fusion": "^1.0.3"
   },
   "devDependencies": {},
   "scripts": {
