@@ -16,9 +16,8 @@ var yelp = new Yelp({
 const restService = express();
 restService.use(bodyParser.json());
 
-function clbk(result) {
+function clbk(res) {
  //callback is ultimately to return Messenger appropriate responses formatted correctly
- var result;
  console.log("results w/ getNearbyEventsBrite or getYelpEvents: ", cardsSend);
  if(cardsSend){
    return res.json({
@@ -42,10 +41,10 @@ restService.get("/p", function (req, res) {
   try {
       if (req) {
         if(req.query.serq){
-          getNearbyEventsBrite(req,clbk);
+          getNearbyEventsBrite(req,clbk,res);
         }
         else if(req.query.yerq){
-          getYelpEvents(req,clbk);
+          getYelpEvents(req,clbk,res);
         }
       }
   }
@@ -60,7 +59,7 @@ restService.get("/p", function (req, res) {
   }
 });
 
-function getYelpEvents(req, callback) {
+function getYelpEvents(req,callback,resy) {
   cityName = "";
   yType = "";
   cardsSend = [];
@@ -69,10 +68,10 @@ function getYelpEvents(req, callback) {
   yType = req.query.yerq;
   console.log("cityName: "+cityName);
   console.log("yType: "+yType);
-  YelpCall(callback);
+  YelpCall(callback,resy);
 }
 
-function YelpCall(callback){
+function YelpCall(callback,resy){
   console.log("yelp call entered");
   // https://github.com/Yelp/yelp-api-v3/blob/master/docs/api-references/businesses-search.md
   yelp.search({term: yType, location: cityName, limit: 10, radius: 25})
@@ -102,7 +101,7 @@ function YelpCall(callback){
         }
       }
     }
-    callback();
+    callback(resy);
   })
   .catch(function (err) {
       console.error("yelp err: "+err);
@@ -118,10 +117,10 @@ function getNearbyEventsBrite(req, callback) {
   eType = req.query.serq;
   console.log("cityName: "+cityName);
   console.log("eType: "+eType);
-  EventbriteCall(callback);
+  EventbriteCall(callback,resy);
 }
 
-function EventbriteCall(callback) {
+function EventbriteCall(callback,resy) {
   var params = {};
   params["q"] = eType;
   params["location.address"] = cityName;
@@ -157,7 +156,7 @@ function EventbriteCall(callback) {
           }
           events.push(events.shift());
         }
-        callback();
+        callback(resy);
       }
   });
 }
