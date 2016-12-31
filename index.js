@@ -217,6 +217,10 @@ function getFBEvents(req, callback) {
     'region':     'us'
   };
 
+  FBCall(callback);
+}
+
+function FBCall(callback){
   gmAPI.geocode(params, function(err, result) {
     console.log('err: '+err);
     console.log('result: '+result);
@@ -241,7 +245,7 @@ function getFBEvents(req, callback) {
             console.log(JSON.stringify(eventss));
             var res = JSON.parse(eventss);
             console.log("res.metadata.events: "+res.metadata.events);
-            if(res.metadata.events > 0){
+            // if(res.metadata.events > 0){
               var lim = res.metadata.events >= 5 ? 5 : res.metadata.events;
               for(var i = 0; i < lim; i++){
                 if(res.events[i]){
@@ -258,9 +262,9 @@ function getFBEvents(req, callback) {
                   console.log("cardObj.subtitle: "+cardObj.subtitle);
                   cardsSend[i] = cardObj;
                 }
-              }
-            }
-            callback();
+               }
+               callback();
+            // }
         }).catch(function (error) {
             console.error("err: "+JSON.stringify(error));
         });
