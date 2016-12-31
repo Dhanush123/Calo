@@ -35,7 +35,7 @@ restService.get("/p", function (req, res) {
   try {
       if (req) {
         if(req.query.fb == "true"){
-          getFBEvents(req, function() {
+          getFBEvents(req, function(result) {
                      //callback is ultimately to return Messenger appropriate responses formatted correctly
                      console.log("results w/ getFBEvents: ", cardsSend);
                      if(cardsSend){
@@ -51,7 +51,7 @@ restService.get("/p", function (req, res) {
                    });
         }
         else if(req.query.serq){
-          getNearbyEventsBrite(req, function() {
+          getNearbyEventsBrite(req, function(result) {
                      //callback is ultimately to return Messenger appropriate responses formatted correctly
                      console.log("results w/ getNearbyEventsBrite: ", cardsSend);
                      if(cardsSend){
@@ -67,7 +67,7 @@ restService.get("/p", function (req, res) {
                    });
         }
         else if(req.query.yerq){
-          getYelpEvents(req, function() {
+          getYelpEvents(req, function(result) {
                      //callback is ultimately to return Messenger appropriate responses formatted correctly
                      console.log("results w/ getYelpEvents: ", cardsSend);
                      if(cardsSend){
