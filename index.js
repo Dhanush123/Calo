@@ -77,17 +77,20 @@ function getYelpEvents(req,callback) {
   yType = "";
   cardsSend = [];
   console.log("req: " + req);
+  console.log("req.query.location: "+req.query.location);
   cityName = req.query.location;
-  yType = req.query.yerq;
   console.log("cityName: "+cityName);
-  console.log("yType: "+yType);
+  console.log("req.query.location: "+req.query.yerq);
+  yType = req.query.yerq;
+  console.log("set yType: "+yType);
   YelpCall(callback);
 }
 
 function YelpCall(callback){
   console.log("yelp call entered");
+  console.log("yelpCall yType: "+yType);
   // https://github.com/Yelp/yelp-api-v3/blob/master/docs/api-references/businesses-search.md
-  yelp.search({term: yType, location: cityName, limit: 10, radius: 25})
+  yelp.search({term: yType, location: cityName, limit: 10, radius: 25, categories: "food"})
   .then(function (data) {
     console.log("got yelp response");
     console.log("data pre-JSONparse: "+data);
