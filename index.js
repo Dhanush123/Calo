@@ -108,7 +108,7 @@ function YelpCall(callback){
       var res = response.jsonBody;
       console.log(res);
       if(res.total >= 5){
-        for(int i = 0; i < 5; i++){
+        for(var i = 0; i < 5; i++){
           if(res.businesses[i]){
             cardObj.title = res.businesses[i].name;
             cardObj.image_url = res.businesses[i].image_url;
