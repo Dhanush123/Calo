@@ -210,6 +210,10 @@ function getFBEvents(req, callback) {
   console.log("req: " + req);
   cityName = req.query.location;
   console.log("cityName: "+cityName);
+  FBCall(callback);
+}
+
+function FBCall(callback){
   var params = {
     'address': cityName,
     'components': 'components=country:US',
@@ -217,10 +221,6 @@ function getFBEvents(req, callback) {
     'region':     'us'
   };
 
-  FBCall(callback);
-}
-
-function FBCall(callback){
   gmAPI.geocode(params, function(err, result) {
     console.log('err: '+err);
     console.log('result: '+result);
