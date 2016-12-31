@@ -243,7 +243,7 @@ function FBCall(callback){
         });
         es.search().then(function (eventss) {
             console.log(JSON.stringify(eventss));
-            var res = JSON.parse(eventss);
+            var res = eventss;
             console.log("res.metadata.events: "+res.metadata.events);
               for(var i = 0; i < 5; i++){
                 if(res.events[i]){
