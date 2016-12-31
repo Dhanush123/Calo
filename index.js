@@ -84,19 +84,20 @@ function getYelpEvents(req, callback) {
 }
 
 function YelpCall(callback){
-
+  console.log("yelp call entered");
   // https://github.com/Yelp/yelp-api-v3/blob/master/docs/api-references/businesses-search.md
   yelp.search({term: yType, location: cityName, limit: 10, radius: 25})
   .then(function (data) {
-    var res = JSON.parse(data);
-    console.log("res: "+res);
-    if(res.total >= 5){
+    console.log("got yelp response");
+    var data = JSON.parse(data);
+    console.log("data: "+data);
+    if(data.total >= 5){
       for(var i = 0; i < 5; i++){
-        if(res.businesses[i]){
-          cardObj.title = res.businesses[i].name;
-          cardObj.image_url = res.businesses[i].image_url;
-          cardObj.subtitle = res.businesses[i].location.address1;
-          cardObj.buttons[0].url = res.businesses[i].url;
+        if(data.businesses[i]){
+          cardObj.title = data.businesses[i].name;
+          cardObj.image_url = data.businesses[i].image_url;
+          cardObj.subtitle = data.businesses[i].location.address1;
+          cardObj.buttons[0].url = data.businesses[i].url;
           cardsSend[i] = cardObj;
         }
       }
@@ -104,7 +105,7 @@ function YelpCall(callback){
     callback();
   })
   .catch(function (err) {
-      console.error(err);
+      console.error("yelp err: "+err);
   });
 }
 
