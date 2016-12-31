@@ -121,7 +121,7 @@ function YelpCall(callback){
     console.log("data: "+data);
     if(data.total > 0){
       var lim = data.total >= 5 ? 5 : data.total;
-      for(var i = 0; i < 5; i++){
+      for(var i = 0; i < lim; i++){
         if(data.businesses[i]){
           var cardObj = {
             title: "",
@@ -245,7 +245,7 @@ function FBCall(callback){
             console.log(JSON.stringify(eventss));
             var res = JSON.parse(eventss);
             console.log("res.metadata.events: "+res.metadata.events);
-              for(var i = 0; i < lim; i++){
+              for(var i = 0; i < 5; i++){
                 if(res.events[i]){
                   var cardObj = {
                     title: "",
@@ -261,9 +261,10 @@ function FBCall(callback){
                   cardsSend[i] = cardObj;
                 }
                 else{
-                  callback();
+                  break;
                 }
                }
+               callback();
         }).catch(function (error) {
             console.error("err: "+JSON.stringify(error));
         });
