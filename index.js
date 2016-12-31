@@ -88,7 +88,7 @@ function YelpCall(callback){
   // https://github.com/Yelp/yelp-api-v3/blob/master/docs/api-references/businesses-search.md
   yelp.search({term: yType, location: cityName, limit: 10, radius: 25})
   .then(function (data) {
-    var res = data.jsonBody;
+    var res = JSON.parse(data);
     console.log("res: "+res);
     if(res.total >= 5){
       for(var i = 0; i < 5; i++){
