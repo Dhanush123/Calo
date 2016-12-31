@@ -197,6 +197,7 @@ function EventbriteCall(callback) {
           }
           events.push(events.shift());
         }
+        callback();
       }
   });
 }
@@ -258,8 +259,8 @@ function getFBEvents(req, callback) {
                   cardsSend[i] = cardObj;
                 }
               }
-              callback();
             }
+            callback();
         }).catch(function (error) {
             console.error("err: "+JSON.stringify(error));
         });
