@@ -34,7 +34,7 @@ restService.get("/p", function (req, res) {
   console.log("hook request");
   try {
       if (req) {
-        if(req.query.fb == "true"){
+        if(req.query.serq == "true"){
           getFBEvents(req, function(result) {
                      //callback is ultimately to return Messenger appropriate responses formatted correctly
                      console.log("results w/ getFBEvents: ", cardsSend);
@@ -204,6 +204,8 @@ function EventbriteCall(callback) {
 function getFBEvents(req, callback) {
   cityName = "";
   cardsSend = [];
+  eType = "";
+  yType = "";
   console.log("req: " + req);
   cityName = req.query.location;
   console.log("cityName: "+cityName);
