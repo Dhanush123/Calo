@@ -177,6 +177,17 @@ function EventbriteCall(callback) {
   });
 }
 
+function setGreetingText() {
+  var greetingData = {
+    setting_type: "greeting",
+    greeting:{
+      text:"Hi {{user_first_name}}, welcome! You can ask about events or food places in any city. For US cities, specify the state if possible."
+    }
+  };
+  createGreetingApi(greetingData);
+}
+
 restService.listen((process.env.PORT || 8000), function () {
+  setGreetingText();
   console.log("Server listening");
 });
