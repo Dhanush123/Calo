@@ -237,8 +237,8 @@ function getFBEvents(req, callback) {
         es.search().then(function (eventss) {
             console.log(JSON.stringify(eventss));
             var res = JSON.parse(eventss);
+            console.log("res.metadata.events: "+res.metadata.events);
             if(res.metadata.events > 0){
-              console.log("res.metadata.events: "+res.metadata.events);
               var lim = res.metadata.events >= 5 ? 5 : res.metadata.events;
               for(var i = 0; i < lim; i++){
                 if(events[i]){
