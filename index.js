@@ -35,7 +35,7 @@ restService.get("/p", function (req, res) {
   try {
       if (req) {
         if(req.query.fb == "true"){
-          getFBEvents(req, function(result) {
+          getFBEvents(req, function() {
                      //callback is ultimately to return Messenger appropriate responses formatted correctly
                      console.log("results w/ getFBEvents: ", cardsSend);
                      if(cardsSend){
@@ -51,7 +51,7 @@ restService.get("/p", function (req, res) {
                    });
         }
         else if(req.query.serq){
-          getNearbyEventsBrite(req, function(result) {
+          getNearbyEventsBrite(req, function() {
                      //callback is ultimately to return Messenger appropriate responses formatted correctly
                      console.log("results w/ getNearbyEventsBrite: ", cardsSend);
                      if(cardsSend){
@@ -67,7 +67,7 @@ restService.get("/p", function (req, res) {
                    });
         }
         else if(req.query.yerq){
-          getYelpEvents(req, function(result) {
+          getYelpEvents(req, function() {
                      //callback is ultimately to return Messenger appropriate responses formatted correctly
                      console.log("results w/ getYelpEvents: ", cardsSend);
                      if(cardsSend){
@@ -201,7 +201,12 @@ function EventbriteCall(callback) {
   });
 }
 
-function getFBEvents(callback) {
+function getFBEvents(req, callback) {
+  cityName = "";
+  cardsSend = [];
+  console.log("req: " + req);
+  cityName = req.query.location;
+  console.log("cityName: "+cityName);
   var params = {
     'address': cityName,
     'components': 'components=country:US',
@@ -254,7 +259,6 @@ function getFBEvents(callback) {
         });
       }
     }
-    callback();
   });
 }
 
