@@ -81,7 +81,7 @@ function getYelpEvents(req,callback) {
   cityName = req.query.location;
   console.log("cityName: "+cityName);
   console.log("req.query.location: "+req.query.yerq);
-  yType = req.query.yerq;
+  yType = req.query.yerq != "undefined" ? req.query.yerq : "American";
   console.log("set yType: "+yType);
   YelpCall(callback);
 }
@@ -130,7 +130,7 @@ function getNearbyEventsBrite(req, callback) {
   cardsSend = [];
   console.log("req: " + req);
   cityName = req.query.location;
-  eType = req.query.serq;
+  eType = req.query.serq != "undefined" ? req.query.serq : "Conference";
   console.log("cityName: "+cityName);
   console.log("eType: "+eType);
   EventbriteCall(callback);
