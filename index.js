@@ -88,7 +88,7 @@ function YelpCall(callback){
     const client = yelp.client(response.jsonBody.access_token);
 
     client.search({
-      term: yerq,
+      term: yType,
       location: cityName
     }).then(response => {
       var res = response.jsonBody;
