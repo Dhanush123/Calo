@@ -120,7 +120,7 @@ function YelpCall(callback){
     var data = JSON.parse(data);
     console.log("data: "+data);
     if(data.total > 0){
-      var lim = data.total >= 5 ? 5 : data.total;
+      var lim = data.total >= 10 ? 10 : data.total;
       for(var i = 0; i < lim; i++){
         if(data.businesses[i]){
           var cardObj = {
@@ -175,7 +175,7 @@ function EventbriteCall(callback) {
       else{
         console.log("events: ", events);
         if(events.length > 0){
-          var lim = events.length >= 5 ? 5 : events.length;
+          var lim = events.length >= 10 ? 10 : events.length;
           for(var i = 0; i < lim; i++){
             if(events[i]){
               var cardObj = {
@@ -245,7 +245,7 @@ function FBCall(callback){
             console.log(JSON.stringify(eventss));
             var res = eventss;
             console.log("res.metadata.events: "+res.metadata.events);
-              for(var i = 0; i < 5; i++){
+              for(var i = 0; i < 10; i++){
                 if(res.events[i]){
                   var cardObj = {
                     title: "",
