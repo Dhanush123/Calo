@@ -50,7 +50,7 @@ restService.get("/p", function (req, res) {
                      }
                    });
         }
-        else if(req.query.serq){
+        else if(req.query.serq || req.query.serq == ""){
           getNearbyEventsBrite(req, function(result) {
                      //callback is ultimately to return Messenger appropriate responses formatted correctly
                      console.log("results w/ getNearbyEventsBrite: ", cardsSend);
@@ -66,7 +66,7 @@ restService.get("/p", function (req, res) {
                      }
                    });
         }
-        else if(req.query.yerq){
+        else if(req.query.yerq || req.query.yerq == ""){
           getYelpEvents(req, function(result) {
                      //callback is ultimately to return Messenger appropriate responses formatted correctly
                      console.log("results w/ getYelpEvents: ", cardsSend);
@@ -104,7 +104,7 @@ function getYelpEvents(req,callback) {
   cityName = req.query.location;
   console.log("cityName: "+cityName);
   console.log("req.query.location: "+req.query.yerq);
-  yType = (req.query.yerq != "undefined" && req.query.yerq != "null") ? req.query.yerq : "American";
+  yType = (req.query.yerq != "undefined" && req.query.yerq != "null" && req.query.yerq != "") ? req.query.yerq : "American";
   console.log("set yType: "+yType);
   YelpCall(callback);
 }
@@ -154,7 +154,7 @@ function getNearbyEventsBrite(req, callback) {
   cardsSend = [];
   console.log("req: " + req);
   cityName = req.query.location;
-  eType = (req.query.serq != "undefined" && req.query.serq != "null") ? req.query.serq : "Conference";
+  eType = (req.query.serq != "undefined" && req.query.serq != "null" && req.query.serq != "") ? req.query.serq : "Conference";
   console.log("cityName: "+cityName);
   console.log("eType: "+eType);
   EventbriteCall(callback);
